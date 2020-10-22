@@ -1,0 +1,40 @@
+---
+- hosts: localhost
+  roles:
+    - role: emit-job-header
+      zuul_log_url: "https://logs.cloud.seanmooney.info"
+      zuul_log_path_shard_build: true
+    - log-inventory
+
+- hosts: all
+  roles:
+    # set up basic workspace and temp ssh keys
+    - add-build-sshkey
+    - start-zuul-console
+    - ensure-output-dirs
+
+- hosts: all
+  tasks:
+    - package:
+        name: "{{ item }}"
+        state: present
+      become: true
+      loop:
+        - git
+        - python3
+
+- hosts: all
+  roles:
+    - validate-host
+    - prepare-workspace-git
+    - role: ensure-tox
+      ensure_global_symlinks: true
+
+- hosts: all
+  tasks:
+    - file:
+        path: /opt/cache/files
+        recurse: true
+        mode: 0775
+        state: directory
+      become: true

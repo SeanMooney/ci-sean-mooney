@@ -1,0 +1,10 @@
+---
+- nodeset:
+    name: single-node-centos-8
+    nodes:
+      - name: controller
+        label: centos-8-ci
+    groups:
+      - name: tempest
+        nodes:
+          - controller

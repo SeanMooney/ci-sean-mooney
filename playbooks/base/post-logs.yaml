@@ -1,0 +1,16 @@
+- hosts: ALL
+  roles:
+    - role: fetch-output
+    - role: merge-output-to-logs
+
+- hosts: localhost
+  gather_facts: False
+  roles:
+    - role: ara-report
+    - role: htmlify-logs
+    - role: generate-zuul-manifest
+    - role: local-log-download
+      local_log_download_api: 'https://zuul.cloud.seanmooney.info/api/tenant/{{ zuul.tenant }}'
+    - role: upload-logs
+      zuul_log_url: 'https://logs.cloud.seanmooney.info'
+      zuul_logserver_root: '/opt/zuul/build_logs'

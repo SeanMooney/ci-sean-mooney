@@ -1,0 +1,67 @@
+---
+- pipeline:
+    name: seans-nfv-ci
+    description: |
+      A collection of NFV CI jobs.
+    success-message: Build succeeded (seans-nfv-ci pipeline).
+    failure-message: |
+      Build failed (seans-nfv-ci pipeline). To rerun just this ci comment
+      "seans-nfv-ci: recheck". To rerun other ci jobs comment "recheck".
+      Note this ci does not currently run on "recheck".
+    manager: independent
+    require:
+      opendev.org:
+        open: True
+        current-patchset: True
+    reject:
+      opendev.org:
+        approval:
+          - Workflow: -1
+    trigger:
+      opendev.org:
+        # - event: patchset-created
+        # - event: change-restored
+        # - event: comment-added
+        #   comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck
+        - event: comment-added
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-nfv-ci:\s*recheck
+        - event: comment-added
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*check experimental
+    precedence: low
+    start:
+      opendev.org:
+        Code-Review: 0
+    success:
+      opendev.org:
+        Code-Review.org: 1
+    failure:
+      opendev.org:
+        Code-Review.org: -1
+
+- pipeline:
+    name: check
+    description: |
+      Newly opened pull requests enter this pipeline to receive an
+      initial verification
+    manager: independent
+    trigger:
+      github:
+        - event: pull_request
+          action:
+            - opened
+            - changed
+            - reopened
+        - event: pull_request
+          action: comment
+          comment: (?i)^\s*recheck\s*$
+        - event: check_run
+    start:
+      github:
+        check: 'in_progress'
+        comment: false
+    success:
+      github:
+        check: 'success'
+    failure:
+      github:
+        check: 'failure'
