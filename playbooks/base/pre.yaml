@@ -1,0 +1,33 @@
+- hosts: localhost
+  roles:
+    - role: emit-job-header
+      zuul_log_url: "https://logs.cloud.seanmooney.info"
+
+- hosts: all
+  roles:
+    # set up basic workspace and temp ssh keys
+    - add-build-sshkey
+    - prepare-workspace
+    - ensure-output-dirs
+    - log-inventory
+
+- hosts: all
+  roles:
+    - validate-host
+    - use-cached-repos
+    - mirror-workspace-git-repos
+    - role: ensure-python
+      python_version: 3.6
+    - role: ensure-tox
+    #- role: fetch-zuul-cloner
+    #  destination: "/usr/zuul-env/bin/zuul-cloner"
+    #  repo_src_dir: "/home/ubuntu/src/git.openstack.org"
+
+- hosts: all
+  tasks:
+    - file:
+        path: /opt/cache/files
+        recurse: yes
+        mode: 0775
+        state: directory
+      become: yes

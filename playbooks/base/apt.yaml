@@ -1,0 +1,12 @@
+- hosts: all
+  tasks:
+    - name: update apt.conf
+      become: yes
+      blockinfile:
+        path: /etc/apt/apt.conf
+        create: True
+        mode: 0777
+        block: |
+          Acquire::http::Proxy "http://192.168.1.155:32345";
+          # Acquire::https::Proxy "http://192.168.1.155:32345";
+          Acquire::https::Proxy "false";

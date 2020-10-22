@@ -1,0 +1,52 @@
+# by default run no jobs on any repo
+- project:
+    name: ^.*$
+    check:
+      jobs: []
+    gate:
+      jobs: []
+    seans-nfv-ci:
+      jobs: []
+
+# for the config project just run noop for now
+- project:
+    name: ci-sean-mooney
+    check:
+      jobs:
+        - noop
+    gate:
+      jobs:
+        - noop
+
+# add per project jobs here
+
+#- project:
+#    name: git.openstack.org/openstack/networking-ovs-dpdk
+#    seans-nfv-ci:
+#      jobs:
+#        - tempest-dpdk
+
+#- project:
+#    name: git.openstack.org/openstack/nova
+#    seans-nfv-ci:
+#      jobs:
+#        - tempest-dpdk
+#        - tempest-pinning
+
+#- project:
+#    name: git.openstack.org/openstack/neutron
+#    seans-nfv-ci:
+#      jobs:
+#        - tempest-dpdk
+
+#- project:
+#    name: git.openstack.org/openstack/os-vif
+#    seans-nfv-ci:
+#      jobs:
+#        - tempest-dpdk
+
+#- project:
+#    name: git.openstack.org/openstack-dev/devstack
+#    seans-nfv-ci:
+#      jobs:
+#        - tempest-dpdk
