@@ -2,8 +2,8 @@
 - hosts: localhost
   roles:
     - role: emit-job-header
-      zuul_log_url: "https://logs.cloud.seanmooney.info"
-      zuul_log_path_shard_build: true
+      zuul_log_url: "https://logs.seanmooney.info"
+      zuul_log_path_shard_build: false
     - log-inventory
 
 - hosts: all
@@ -38,3 +38,4 @@
         mode: 0775
         state: directory
       become: true
+

@@ -25,14 +25,15 @@
       - zuul: openstack/project-config
     timeout: 1800
     nodeset:  openstack-single-node-focal
+    override-checkout: main
 
 - job:
     name: dsvm-minimal-base
     parent: devstack
     branches: main
-    override-checkout: master
     required-projects:
       - name: openstack/devstack
+        override-checkout: master
 
 - job:
     name: dsvm-minimal-base
@@ -74,7 +75,7 @@
           dstat: true
           tls-proxy: false
           etcd3: flase
-          peakmem_tracker: true
+          memory_tracker: true
           rabbit: false
           # Cinder services
           c-api: false
@@ -140,6 +141,11 @@
 - job:
     name: tempest-full-py3
     parent: tempest-full
+
+- job:
+    name: tempest-multinode-full-py3
+    parent: tempest-full
+    nodeset: openstack-two-node-focal
 
 - job:
     name: tempest-all

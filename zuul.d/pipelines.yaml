@@ -33,10 +33,10 @@
         Code-Review: 0
     success:
       opendev.org:
-        Code-Review.org: 1
+        Code-Review: 1
     failure:
       opendev.org:
-        Code-Review.org: -1
+        Code-Review: -1
 
 - pipeline:
     name: check
