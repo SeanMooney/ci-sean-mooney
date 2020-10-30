@@ -32,9 +32,11 @@
       opendev.org:
         Code-Review: 0
     success:
+      db:
       opendev.org:
         Code-Review: 1
     failure:
+      db:
       opendev.org:
         Code-Review: -1
 
@@ -60,8 +62,10 @@
         check: 'in_progress'
         comment: false
     success:
+      db:
       github:
         check: 'success'
     failure:
+      db:
       github:
         check: 'failure'
