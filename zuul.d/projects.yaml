@@ -4,9 +4,13 @@
     name: ^.*$
     check:
       jobs: []
-    gate:
+    manual-ci:
       jobs: []
-    seans-nfv-ci:
+    automatic-ci:
+      jobs: []
+    nightly-ci:
+      jobs: []
+    weekly-ci:
       jobs: []
 
 # for the config project just run noop for now
@@ -15,11 +19,19 @@
     check:
       jobs:
         - noop
-    gate:
-      jobs:
-        - noop
 
 # add per project jobs here
+
+
+- project:
+    name: opendev.org/openstack/whitebox-tempest-plugin
+    automatic-ci:
+      jobs:
+        - whitebox-multinode-multinuma-devstack:
+            nodeset: nfv-multi-numa-multinode
+            vars:
+                devstack_localrc:
+                    SMT_HOSTS: "{{ groups['compute'] | map('extract', hostvars, ['ansible_hostname']) | join(',') }}"
 
 # - project:
 #    name: git.openstack.org/openstack/networking-ovs-dpdk
@@ -52,12 +64,3 @@
 #      jobs:
 #        - tempest-dpdk
 
-- project:
-    name: opendev.org/openstack/whitebox-tempest-plugin
-    seans-nfv-ci:
-      jobs:
-        - whitebox-multinode-multinuma-devstack:
-            nodeset: nfv-multi-numa-multinode
-            vars:
-                devstack_localrc:
-                    SMT_HOSTS: "{{ groups['compute'] | map('extract', hostvars, ['ansible_hostname']) | join(',') }}"

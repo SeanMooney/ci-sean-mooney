@@ -1,36 +1,141 @@
 ---
 - pipeline:
-    name: seans-nfv-ci
+    name: manual-ci
     description: |
-      A collection of NFV CI jobs.
+      A collection of NFV CI jobs triggered manually via comment.
     success-message: Build succeeded (seans-nfv-ci pipeline).
     failure-message: |
-      Build failed (seans-nfv-ci pipeline). To rerun just this ci comment
-      "seans-nfv-ci: recheck". To rerun other ci jobs comment "recheck".
+      Build failed (manual-ci pipeline). To rerun just this ci comment
+      "seans-manual-ci: recheck". To rerun other ci jobs comment "recheck".
       Note this ci does not currently run on "recheck".
     manager: independent
     require:
       opendev.org:
-        open: True
-        current-patchset: True
+        open: true
+        current-patchset: true
     reject:
       opendev.org:
         approval:
           - Workflow: -1
     trigger:
       opendev.org:
-        # - event: patchset-created
-        # - event: change-restored
-        # - event: comment-added
-        #   comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck
         - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-nfv-ci:\s*recheck
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-manual-ci:\s*recheck
         - event: comment-added
           comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*check experimental
+    precedence: high
+    start:
+      opendev.org:
+        Code-Review: 0
+    success:
+      db:
+      opendev.org:
+        Code-Review: 1
+    failure:
+      db:
+      opendev.org:
+        Code-Review: -1
+
+- pipeline:
+    name: automatic-ci
+    description: |
+      A collection of NFV CI jobs.
+    success-message: Build succeeded (seans-nfv-ci pipeline).
+    failure-message: |
+      Build failed (automatic-ci pipeline). To rerun just this ci comment
+      "seans-automatic-ci: recheck". To rerun other ci jobs comment "recheck".
+      Note this ci does run on "recheck".
+    manager: independent
+    require:
+      opendev.org:
+        open: true
+        current-patchset: true
+    reject:
+      opendev.org:
+        approval:
+          - Workflow: -1
+    trigger:
+      opendev.org:
+        - event: patchset-created
+        - event: change-restored
+        - event: comment-added
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck
+        - event: comment-added
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-automatic-ci:\s*recheck
     precedence: low
     start:
       opendev.org:
         Code-Review: 0
+    success:
+      db:
+      opendev.org:
+        Code-Review: 1
+    failure:
+      db:
+      opendev.org:
+        Code-Review: -1
+
+- pipeline:
+    name: nightly-ci
+    description: |
+      A collection of NFV CI jobs run nightly.
+    success-message: Build succeeded (seans-nfv-ci pipeline).
+    failure-message: |
+      Build failed (nightly-ci-pipeline). To rerun just this ci comment
+      "seans-nightly-ci: recheck". To rerun other ci jobs comment "recheck".
+      Note this ci does run on "recheck".
+    manager: independent
+    require:
+      opendev.org:
+        open: true
+        current-patchset: true
+    reject:
+      opendev.org:
+        approval:
+          - Workflow: -1
+    post-review: true
+    trigger:
+      opendev.org:
+        - event: comment-added
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-nightly-ci:\s*recheck
+      timer:
+        - time: '17 05 * * * * 60'
+    precedence: low
+    success:
+      db:
+      opendev.org:
+        Code-Review: 1
+    failure:
+      db:
+      opendev.org:
+        Code-Review: -1
+
+- pipeline:
+    name: weekly-ci
+    description: |
+      A collection of NFV CI jobs run nightly.
+    success-message: Build succeeded (seans-nfv-ci pipeline).
+    failure-message: |
+      Build failed (nightly-ci-pipeline). To rerun just this ci comment
+      "seans-weekly-ci: recheck". To rerun other ci jobs comment "recheck".
+      Note this ci does run on "recheck".
+    manager: independent
+    require:
+      opendev.org:
+        open: true
+        current-patchset: true
+    reject:
+      opendev.org:
+        approval:
+          - Workflow: -1
+    post-review: true
+    trigger:
+      opendev.org:
+        - event: comment-added
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-weekly-ci:\s*recheck
+      timer:
+        - time: '0 8 * * 6'
+    precedence: low
     success:
       db:
       opendev.org:
