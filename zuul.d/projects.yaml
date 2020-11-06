@@ -1,18 +1,4 @@
 ---
-# by default run no jobs on any repo
-- project:
-    name: ^.*$
-    check:
-      jobs: []
-    manual-ci:
-      jobs: []
-    automatic-ci:
-      jobs: []
-    nightly-ci:
-      jobs: []
-    weekly-ci:
-      jobs: []
-
 # for the config project just run noop for now
 - project:
     name: SeanMooney/ci-sean-mooney
