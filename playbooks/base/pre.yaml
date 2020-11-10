@@ -15,7 +15,8 @@
 
 - hosts: all
   tasks:
-    - package:
+    - name: "install base packages"
+      package:
         name: "{{ item }}"
         state: present
       become: true
@@ -32,10 +33,10 @@
 
 - hosts: all
   tasks:
-    - file:
+    - name: "create cache files dir"
+      file:
         path: /opt/cache/files
         recurse: true
         mode: 0775
         state: directory
       become: true
-

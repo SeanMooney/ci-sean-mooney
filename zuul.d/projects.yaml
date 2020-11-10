@@ -4,7 +4,7 @@
     name: SeanMooney/ci-sean-mooney
     check:
       jobs:
-        - noop
+        - tox-linters
 
 # add per project jobs here
 
@@ -16,8 +16,8 @@
         - whitebox-multinode-multinuma-devstack:
             nodeset: nfv-multi-numa-multinode
             vars:
-                devstack_localrc:
-                    SMT_HOSTS: "{{ groups['compute'] | map('extract', hostvars, ['ansible_hostname']) | join(',') }}"
+              devstack_localrc:
+                SMT_HOSTS: "{{ groups['compute'] | map('extract', hostvars, ['ansible_hostname']) | join(',') }}"
 
 # - project:
 #    name: git.openstack.org/openstack/networking-ovs-dpdk
@@ -49,4 +49,3 @@
 #    seans-nfv-ci:
 #      jobs:
 #        - tempest-dpdk
-

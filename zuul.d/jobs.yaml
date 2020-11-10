@@ -24,7 +24,7 @@
       - zuul: openstack/openstack-zuul-jobs
       - zuul: openstack/project-config
     timeout: 1800
-    nodeset:  openstack-single-node-focal
+    nodeset: openstack-single-node-focal
     override-checkout: main
 
 - job:
@@ -44,7 +44,7 @@
 - job:
     name: dsvm-base
     parent: dsvm-minimal-base
-    nodeset:  openstack-single-node-focal
+    nodeset: openstack-single-node-focal
     description: |
       python 3 devstack base job.
     vars:

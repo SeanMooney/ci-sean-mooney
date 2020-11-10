@@ -1,10 +1,11 @@
+---
 - hosts: ALL
   roles:
     - role: fetch-output
     - role: merge-output-to-logs
 
 - hosts: localhost
-  gather_facts: False
+  gather_facts: false
   roles:
     - role: ara-report
     - role: generate-zuul-manifest
