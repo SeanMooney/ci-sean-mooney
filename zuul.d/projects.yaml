@@ -8,16 +8,21 @@
 
 # add per project jobs here
 
+#- project:
+#    name: openstack/nova
+#    automatic-ci:
+#      jobs:
+#        - tempest-full
 
-- project:
-    name: opendev.org/openstack/whitebox-tempest-plugin
-    automatic-ci:
-      jobs:
-        - whitebox-multinode-multinuma-devstack:
-            nodeset: nfv-multi-numa-multinode
-            vars:
-              devstack_localrc:
-                SMT_HOSTS: "{{ groups['compute'] | map('extract', hostvars, ['ansible_hostname']) | join(',') }}"
+#- project:
+#    name: opendev.org/openstack/whitebox-tempest-plugin
+#    automatic-ci:
+#      jobs:
+#        - whitebox-multinode-multinuma-devstack:
+#            nodeset: nfv-multi-numa-multinode
+#            vars:
+#              devstack_localrc:
+#                SMT_HOSTS: "{{ groups['compute'] | map('extract', hostvars, ['ansible_hostname']) | join(',') }}"
 
 # - project:
 #    name: git.openstack.org/openstack/networking-ovs-dpdk

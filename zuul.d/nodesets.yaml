@@ -38,3 +38,27 @@
       - name: peers
         nodes:
           - compute
+
+- nodeset:
+    name: ubuntu-focal
+    nodes:
+      - name: ubuntu-focal
+        label: ubuntu-focal
+
+- nodeset:
+    name: ubuntu-jammy
+    nodes:
+      - name: ubuntu-jammy
+        label: ubuntu-jammy
+
+- nodeset:
+    name: ubuntu-xenial
+    nodes:
+      - name: ubuntu-xenial
+        label: ubuntu-xenial
+
+- nodeset:
+    name: ubuntu-bionic
+    nodes:
+      - name: ubuntu-bionic
+        label: ubuntu-bionic
