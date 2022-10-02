@@ -28,11 +28,9 @@
       opendev.org:
         Code-Review: 0
     success:
-      db:
       opendev.org:
         Code-Review: 1
     failure:
-      db:
       opendev.org:
         Code-Review: -1
 
@@ -67,11 +65,9 @@
       opendev.org:
         Code-Review: 0
     success:
-      db:
       opendev.org:
         Code-Review: 1
     failure:
-      db:
       opendev.org:
         Code-Review: -1
 
@@ -85,28 +81,14 @@
       "seans-nightly-ci: recheck". To rerun other ci jobs comment "recheck".
       Note this ci does run on "recheck".
     manager: independent
-    require:
-      opendev.org:
-        open: true
-        current-patchset: true
-    reject:
-      opendev.org:
-        approval:
-          - Workflow: -1
-    post-review: true
     trigger:
-      opendev.org:
-        - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-nightly-ci:\s*recheck
       timer:
         - time: '17 05 * * * * 60'
     precedence: low
     success:
-      db:
       opendev.org:
         Code-Review: 1
     failure:
-      db:
       opendev.org:
         Code-Review: -1
 
@@ -120,28 +102,14 @@
       "seans-weekly-ci: recheck". To rerun other ci jobs comment "recheck".
       Note this ci does run on "recheck".
     manager: independent
-    require:
-      opendev.org:
-        open: true
-        current-patchset: true
-    reject:
-      opendev.org:
-        approval:
-          - Workflow: -1
-    post-review: true
     trigger:
-      opendev.org:
-        - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-weekly-ci:\s*recheck
       timer:
         - time: '0 8 * * 6'
     precedence: low
     success:
-      db:
       opendev.org:
         Code-Review: 1
     failure:
-      db:
       opendev.org:
         Code-Review: -1
 
@@ -167,10 +135,8 @@
         check: 'in_progress'
         comment: false
     success:
-      db:
       github:
         check: 'success'
     failure:
-      db:
       github:
         check: 'failure'
