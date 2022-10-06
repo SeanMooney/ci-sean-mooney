@@ -1,4 +1,22 @@
 ---
+- hosts: all
+  tasks:
+    - name: "install base packages"
+      package:
+        name: "{{ item }}"
+        state: present
+      become: true
+      loop:
+        - git
+        - python3
+    - name: Install acl
+      when: ansible_os_family == "Debian"
+      apt:
+        state: latest
+        update_cache: true
+        pkg:
+          - acl # required for become to work
+
 - hosts: localhost
   roles:
     - role: emit-job-header
@@ -12,17 +30,6 @@
     - add-build-sshkey
     - start-zuul-console
     - ensure-output-dirs
-
-- hosts: all
-  tasks:
-    - name: "install base packages"
-      package:
-        name: "{{ item }}"
-        state: present
-      become: true
-      loop:
-        - git
-        - python3
 
 - hosts: all
   roles:
