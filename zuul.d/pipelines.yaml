@@ -2,7 +2,7 @@
 - pipeline:
     name: manual-ci
     description: |
-      A collection of NFV CI jobs triggered manually via comment.
+      A collection of CI jobs triggered manually via comment.
     success-message: Build succeeded (manual-ci pipeline).
     failure-message: |
       Build failed (manual-ci pipeline). To rerun just this ci comment
@@ -21,23 +21,21 @@
       opendev.org:
         - event: comment-added
           comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-manual-ci:\s*recheck
-        - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*check experimental
     precedence: high
     start:
-      opendev.org:
+      opendev:
         Code-Review: 0
     success:
-      opendev.org:
+      opendev:
         Code-Review: 1
     failure:
-      opendev.org:
+      opendev:
         Code-Review: -1
 
 - pipeline:
     name: automatic-ci
     description: |
-      A collection of NFV CI jobs.
+      A collection of CI jobs.
     success-message: Build succeeded (automatic-ci pipeline).
     failure-message: |
       Build failed (automatic-ci pipeline). To rerun just this ci comment
@@ -45,15 +43,15 @@
       Note this ci does run on "recheck".
     manager: independent
     require:
-      opendev.org:
+      opendev:
         open: true
         current-patchset: true
     reject:
-      opendev.org:
+      opendev:
         approval:
           - Workflow: -1
     trigger:
-      opendev.org:
+      opendev:
         - event: patchset-created
         - event: change-restored
         - event: comment-added
@@ -74,12 +72,10 @@
 - pipeline:
     name: nightly-ci
     description: |
-      A collection of NFV CI jobs run nightly.
+      A collection of CI jobs run nightly.
     success-message: Build succeeded (nightly-ci pipeline).
     failure-message: |
-      Build failed (nightly-ci pipeline). To rerun just this ci comment
-      "seans-nightly-ci: recheck". To rerun other ci jobs comment "recheck".
-      Note this ci does run on "recheck".
+      Build failed (nightly-ci pipeline).
     manager: independent
     trigger:
       timer:
@@ -95,12 +91,10 @@
 - pipeline:
     name: weekly-ci
     description: |
-      A collection of NFV CI jobs run weekly.
+      A collection of CI jobs run weekly.
     success-message: Build succeeded (weekly-ci pipeline).
     failure-message: |
-      Build failed (weekly-ci pipeline). To rerun just this ci comment
-      "seans-weekly-ci: recheck". To rerun other ci jobs comment "recheck".
-      Note this ci does run on "recheck".
+      Build failed (weekly-ci pipeline).
     manager: independent
     trigger:
       timer:

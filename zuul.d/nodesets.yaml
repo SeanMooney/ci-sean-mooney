@@ -1,64 +1,30 @@
 ---
-- nodeset:
-    name: single-node-centos-8
-    nodes:
-      - name: controller
-        label: centos-8-ci
-    groups:
-      - name: tempest
-        nodes:
-          - controller
-
-- nodeset:
-    name: nfv-multi-numa-multinode
-    nodes:
-      - name: controller
-        label: ubuntu-focal
-      - name: compute
-        label: ubuntu-focal
-    groups:
-      # Node where tests are executed and test results collected
-      - name: tempest
-        nodes:
-          - controller
-      # Nodes running the compute service
-      - name: compute
-        nodes:
-          - controller
-          - compute
-      # Nodes that are not the controller
-      - name: subnode
-        nodes:
-          - compute
-      # Switch node for multinode networking setup
-      - name: switch
-        nodes:
-          - controller
-      # Peer nodes for multinode networking setup
-      - name: peers
-        nodes:
-          - compute
-
-- nodeset:
-    name: ubuntu-focal
-    nodes:
-      - name: ubuntu-focal
-        label: ubuntu-focal
-
-- nodeset:
-    name: ubuntu-jammy
-    nodes:
-      - name: ubuntu-jammy
-        label: ubuntu-jammy
-
-- nodeset:
-    name: ubuntu-xenial
-    nodes:
-      - name: ubuntu-xenial
-        label: ubuntu-xenial
-
-- nodeset:
-    name: ubuntu-bionic
-    nodes:
-      - name: ubuntu-bionic
-        label: ubuntu-bionic
+# - nodeset:
+#     name: nfv-multi-numa-multinode
+#     nodes:
+#       - name: controller
+#         label: ubuntu-focal
+#       - name: compute
+#         label: ubuntu-focal
+#     groups:
+#       # Node where tests are executed and test results collected
+#       - name: tempest
+#         nodes:
+#           - controller
+#       # Nodes running the compute service
+#       - name: compute
+#         nodes:
+#           - controller
+#           - compute
+#       # Nodes that are not the controller
+#       - name: subnode
+#         nodes:
+#           - compute
+#       # Switch node for multinode networking setup
+#       - name: switch
+#         nodes:
+#           - controller
+#       # Peer nodes for multinode networking setup
+#       - name: peers
+#         nodes:
+#           - compute

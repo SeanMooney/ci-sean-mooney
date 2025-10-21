@@ -13,179 +13,176 @@
     pre-run:
       # - playbooks/base/apt.yaml
       - playbooks/base/pre.yaml
-    post-run:
-      - playbooks/base/post-ssh.yaml
-      - playbooks/base/post-logs.yaml
+    # post-run:
+    #   - playbooks/base/post-ssh.yaml
+    #   - playbooks/base/post-logs.yaml
     vars:
       ara_report_type: html
       ara_report_path: ara-report
     roles:
       - zuul: zuul/zuul-jobs
-      - zuul: openstack/openstack-zuul-jobs
-      - zuul: openstack/project-config
     timeout: 1800
-    nodeset: openstack-single-node-focal
     override-checkout: main
 
-- job:
-    name: dsvm-minimal-base
-    parent: devstack
-    branches: main
-    required-projects:
-      - name: openstack/devstack
-        override-checkout: master
+# - job:
+#     name: dsvm-minimal-base
+#     parent: devstack
+#     branches: main
+#     required-projects:
+#       - name: openstack/devstack
+#         override-checkout: master
 
-- job:
-    name: dsvm-minimal-base
-    parent: devstack
-    required-projects:
-      - name: openstack/devstack
+# - job:
+#     name: dsvm-minimal-base
+#     parent: devstack
+#     required-projects:
+#       - name: openstack/devstack
 
-- job:
-    name: dsvm-base
-    parent: dsvm-minimal-base
-    nodeset: openstack-single-node-focal
-    description: |
-      python 3 devstack base job.
-    vars:
-      devstack_localrc:
-        USE_PYTHON3: true
-        LIBVIRT_TYPE: kvm
-      devstack_services:
-        dstat: true
-        etcd3: flase
-        memory_tracker: true
-        rabbit: true
-        tls-proxy: false
-        s-account: false
-        s-container: false
-        s-object: false
-        s-proxy: false
-        # Cinder services
-        c-api: true
-        c-bak: false
-        c-sch: true
-        c-vol: true
-        cinder: true
-    group-vars:
-      subnode:
-        devstack_localrc:
-          LIBVIRT_TYPE: kvm
-        devstack_services:
-          dstat: true
-          tls-proxy: false
-          etcd3: flase
-          memory_tracker: true
-          rabbit: false
-          # Cinder services
-          c-api: false
-          c-bak: false
-          c-sch: false
-          c-vol: true
-          cinder: false
-- job:
-    name: dsvm-tempest-base
-    parent: dsvm-base
-    description: |
-      Base Tempest job.
-      This Tempest job provides the base for both the single and multi-node
-      test setup. To run a multi-node test inherit from devstack-tempest and
-      set the nodeset to a multi-node one.
-    required-projects:
-      - openstack/tempest
-    timeout: 7200
-    roles:
-      - zuul: openstack/devstack
-      - zuul: openstack/tempest
-    vars:
-      devstack_services:
-        tempest: true
-      devstack_local_conf:
-        test-config:
-          $TEMPEST_CONFIG:
-            compute:
-              min_compute_nodes: "{{ groups['compute'] | default(['controller']) | length }}"
-            compute-feature-enabled:
-              rescue: false
-      test_results_stage_name: test_results
-      zuul_copy_output:
-        '{{ devstack_base_dir }}/tempest/etc/tempest.conf': logs
-        '{{ devstack_base_dir }}/tempest/etc/accounts.yaml': logs
-        '{{ devstack_base_dir }}/tempest/tempest.log': logs
-        '{{ stage_dir }}/{{ test_results_stage_name }}.subunit': logs
-        '{{ stage_dir }}/{{ test_results_stage_name }}.html': logs
-        '{{ stage_dir }}/stackviz': logs
-      extensions_to_txt:
-        conf: true
-        log: true
-        yaml: true
-        yml: true
-    run: playbooks/tempest/run-tempest.yaml
-    post-run: playbooks/tempest/post-tempest.yaml
+# - job:
+#     name: dsvm-base
+#     parent: dsvm-minimal-base
+#     nodeset: openstack-single-node-focal
+#     description: |
+#       python 3 devstack base job.
+#     vars:
+#       devstack_localrc:
+#         USE_PYTHON3: true
+#         LIBVIRT_TYPE: kvm
+#       devstack_services:
+#         dstat: true
+#         etcd3: flase
+#         memory_tracker: true
+#         rabbit: true
+#         tls-proxy: false
+#         s-account: false
+#         s-container: false
+#         s-object: false
+#         s-proxy: false
+#         # Cinder services
+#         c-api: true
+#         c-bak: false
+#         c-sch: true
+#         c-vol: true
+#         cinder: true
+#     group-vars:
+#       subnode:
+#         devstack_localrc:
+#           LIBVIRT_TYPE: kvm
+#         devstack_services:
+#           dstat: true
+#           tls-proxy: false
+#           etcd3: flase
+#           memory_tracker: true
+#           rabbit: false
+#           # Cinder services
+#           c-api: false
+#           c-bak: false
+#           c-sch: false
+#           c-vol: true
+#           cinder: false
+# - job:
+#     name: dsvm-tempest-base
+#     parent: dsvm-base
+#     description: |
+#       Base Tempest job.
+#       This Tempest job provides the base for both the single and multi-node
+#       test setup. To run a multi-node test inherit from devstack-tempest and
+#       set the nodeset to a multi-node one.
+#     required-projects:
+#       - openstack/tempest
+#     timeout: 7200
+#     roles:
+#       - zuul: openstack/devstack
+#       - zuul: openstack/tempest
+#     vars:
+#       devstack_services:
+#         tempest: true
+#       devstack_local_conf:
+#         test-config:
+#           $TEMPEST_CONFIG:
+#             compute:
+#               min_compute_nodes: "{{ groups['compute'] | default(['controller']) | length }}"
+#             compute-feature-enabled:
+#               rescue: false
+#       test_results_stage_name: test_results
+#       zuul_copy_output:
+#         '{{ devstack_base_dir }}/tempest/etc/tempest.conf': logs
+#         '{{ devstack_base_dir }}/tempest/etc/accounts.yaml': logs
+#         '{{ devstack_base_dir }}/tempest/tempest.log': logs
+#         '{{ stage_dir }}/{{ test_results_stage_name }}.subunit': logs
+#         '{{ stage_dir }}/{{ test_results_stage_name }}.html': logs
+#         '{{ stage_dir }}/stackviz': logs
+#       extensions_to_txt:
+#         conf: true
+#         log: true
+#         yaml: true
+#         yml: true
+#     run: playbooks/tempest/run-tempest.yaml
+#     post-run: playbooks/tempest/post-tempest.yaml
 
-- job:
-    name: tempest-full
-    parent: dsvm-tempest-base
-    # This currently works from stable/pike on.
-    # Before stable/pike, legacy version of tempest-full
-    # 'legacy-tempest-dsvm-neutron-full' run.
-    branches: ^(?!stable/ocata).*$
-    description: |
-      Base tempest job with python 3 and neutron.
-      Former names for this job where:
-        * legacy-tempest-dsvm-neutron-full
-        * gate-tempest-dsvm-neutron-full-ubuntu-xenial
-    vars:
-      tox_envlist: full
+# - job:
+#     name: tempest-full
+#     parent: dsvm-tempest-base
+#     # This currently works from stable/pike on.
+#     # Before stable/pike, legacy version of tempest-full
+#     # 'legacy-tempest-dsvm-neutron-full' run.
+#     branches: ^(?!stable/ocata).*$
+#     description: |
+#       Base tempest job with python 3 and neutron.
+#       Former names for this job where:
+#         * legacy-tempest-dsvm-neutron-full
+#         * gate-tempest-dsvm-neutron-full-ubuntu-xenial
+#     vars:
+#       tox_envlist: full
 
-- job:
-    name: tempest-full-py3
-    parent: tempest-full
+# - job:
+#     name: tempest-full-py3
+#     parent: tempest-full
 
-- job:
-    name: tempest-multinode-full-py3
-    parent: tempest-full
-    nodeset: openstack-two-node-focal
+# - job:
+#     name: tempest-multinode-full-py3
+#     parent: tempest-full
+#     nodeset: openstack-two-node-focal
 
-- job:
-    name: tempest-all
-    parent: dsvm-tempest-base
-    branches: ^(?!stable/ocata).*$
-    description: |
-      Base tempest job running all tests
-    vars:
-      tox_envlist: all
+# - job:
+#     name: tempest-all
+#     parent: dsvm-tempest-base
+#     branches: ^(?!stable/ocata).*$
+#     description: |
+#       Base tempest job running all tests
+#     vars:
+#       tox_envlist: all
 
-- job:
-    name: devstack-plugin-ceph-multinode-tempest-py3
-    parent: tempest-multinode-full-py3
-    description: |
-      Integration tests that runs the ceph device plugin across multiple
-      nodes on py3.
-    required-projects:
-      - openstack/cinder-tempest-plugin
-      - openstack/devstack-plugin-ceph
-    timeout: 10800
-    voting: false
-    vars:
-      devstack_localrc:
-        ENABLE_FILE_INJECTION: false
-        ENABLE_VOLUME_MULTIATTACH: true
-        TEMPEST_RUN_VALIDATION: false
-        CINDER_CEPH_UUID: d531d2d4-3937-429c-b0c2-658fe41e82aa
-      devstack_plugins:
-        devstack-plugin-ceph: https://opendev.org/openstack/devstack-plugin-ceph
-      devstack_services:
-        # Disable horizon (inherited from the parent, not needed by the tests executed here)
-        horizon: false
-      tox_envlist: all
-      tempest_plugins:
-        - cinder-tempest-plugin
-      tempest_test_regex: |
-        (^tempest\.(api|scenario\.test_encrypted_cinder_volumes|scenario\.test_volume|scenario\.test_shelve_instance)|(^cinder_tempest_plugin))
-      tempest_test_blacklist: '{{ ansible_user_dir }}/{{ zuul.projects["opendev.org/openstack/devstack-plugin-ceph"].src_dir }}/tempest_skiplist_multinode.txt'
-    group-vars:
-      subnode:
-        devstack_localrc:
-          REMOTE_CEPH: true
-          CINDER_CEPH_UUID: d531d2d4-3937-429c-b0c2-658fe41e82aa
+# - job:
+#     name: devstack-plugin-ceph-multinode-tempest-py3
+#     parent: tempest-multinode-full-py3
+#     description: |
+#       Integration tests that runs the ceph device plugin across multiple
+#       nodes on py3.
+#     required-projects:
+#       - openstack/cinder-tempest-plugin
+#       - openstack/devstack-plugin-ceph
+#     timeout: 10800
+#     voting: false
+#     vars:
+#       devstack_localrc:
+#         ENABLE_FILE_INJECTION: false
+#         ENABLE_VOLUME_MULTIATTACH: true
+#         TEMPEST_RUN_VALIDATION: false
+#         CINDER_CEPH_UUID: d531d2d4-3937-429c-b0c2-658fe41e82aa
+#       devstack_plugins:
+#         devstack-plugin-ceph: https://opendev.org/openstack/devstack-plugin-ceph
+#       devstack_services:
+#         # Disable horizon (inherited from the parent, not needed by the tests executed here)
+#         horizon: false
+#       tox_envlist: all
+#       tempest_plugins:
+#         - cinder-tempest-plugin
+#       tempest_test_regex: |
+#         (^tempest\.(api|scenario\.test_encrypted_cinder_volumes|scenario\.test_volume|scenario\.test_shelve_instance)|(^cinder_tempest_plugin))
+#       tempest_test_blacklist: '{{ ansible_user_dir }}/{{ zuul.projects["opendev.org/openstack/devstack-plugin-ceph"].src_dir }}/tempest_skiplist_multinode.txt'
+#     group-vars:
+#       subnode:
+#         devstack_localrc:
+#           REMOTE_CEPH: true
+#           CINDER_CEPH_UUID: d531d2d4-3937-429c-b0c2-658fe41e82aa

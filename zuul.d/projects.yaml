@@ -4,7 +4,7 @@
     name: SeanMooney/ci-sean-mooney
     check:
       jobs:
-        - tox-linters
+        - noop
 
 # add per project jobs here
 
