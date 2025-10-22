@@ -1,0 +1,4 @@
+---
+- hosts: all
+  roles:
+    - role: upload-logs-s3

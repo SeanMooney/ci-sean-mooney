@@ -1,5 +1,12 @@
 ---
 - hosts: all
+  roles:
+    - role: configure-mirrors
+      pypi_mirror: "http://192.168.16.32:5000/simple"
+
+- import_playbook: apt.yaml
+
+- hosts: all
   tasks:
     - name: "install base packages"
       package:
@@ -21,7 +28,7 @@
 - hosts: localhost
   roles:
     - role: emit-job-header
-      zuul_log_url: "https://logs.seanmooney.info"
+      zuul_log_url: "https://minio-api.teim.app/zuul-logs"
       zuul_log_path_shard_build: false
     - log-inventory
 

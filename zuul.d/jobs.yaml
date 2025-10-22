@@ -11,17 +11,20 @@
 
       It also sets a default timeout value (which may be overidden).
     pre-run:
-      # - playbooks/base/apt.yaml
       - playbooks/base/pre.yaml
-    # post-run:
-    #   - playbooks/base/post-ssh.yaml
-    #   - playbooks/base/post-logs.yaml
+    post-run:
+      - playbooks/base/post-ssh.yaml
+      - playbooks/base/upload-logs.yaml
+    secrets:
+      - name: zuul_log_targets
+        secret: minio-logs-secret
     vars:
       ara_report_type: html
       ara_report_path: ara-report
     roles:
       - zuul: zuul/zuul-jobs
     timeout: 1800
+    nodeset: ubuntu-24-04-single-node-pod
     override-checkout: main
 
 # - job:

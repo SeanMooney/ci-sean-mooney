@@ -1,4 +1,10 @@
 ---
+- nodeset:
+    name: ubuntu-24-04-single-node-pod
+    nodes:
+      - name: ubuntu-24-04
+        label: ubuntu-24-04-pod
+
 # - nodeset:
 #     name: nfv-multi-numa-multinode
 #     nodes:
