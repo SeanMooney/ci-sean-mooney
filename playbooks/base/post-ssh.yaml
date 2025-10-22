@@ -1,5 +1,0 @@
----
-- hosts: all
-  ignore_errors: true
-  roles:
-    - remove-build-sshkey
