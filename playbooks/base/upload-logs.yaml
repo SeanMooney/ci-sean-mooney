@@ -9,4 +9,3 @@
       zuul_log_create_indexes: "{{ zuul_log_targets.zuul_log_create_indexes | default(true) }}"
       zuul_log_bucket_public: "{{ zuul_log_targets.zuul_log_bucket_public | default(true) }}"
       upload_logs_s3_addressing_style: "{{ zuul_log_targets.upload_logs_s3_addressing_style | default('path') }}"
-      zuul_log_path: "{{ zuul_log_targets.zuul_log_path | default('/var/log/zuul') }}"
