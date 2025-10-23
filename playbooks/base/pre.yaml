@@ -25,7 +25,6 @@
         pkg:
           - acl # required for become to work
 
-
 - hosts: all
   roles:
     - start-zuul-console
