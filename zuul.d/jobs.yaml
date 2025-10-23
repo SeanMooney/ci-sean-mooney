@@ -31,6 +31,8 @@
     parent: base
     description: |
       Debug version of base job with S3 upload debugging enabled.
+    run:
+      - playbooks/base/run-debug.yaml
     post-run:
       - playbooks/base/upload-logs-debug.yaml
     timeout: 1800

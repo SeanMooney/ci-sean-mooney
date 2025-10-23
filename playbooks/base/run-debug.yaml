@@ -1,0 +1,33 @@
+---
+- hosts: all
+  tasks:
+    - name: Debug job - basic setup
+      debug:
+        msg: "Starting base-debug-s3 job for S3 upload debugging"
+      
+    - name: Create test log directory
+      file:
+        path: /var/log/zuul
+        state: directory
+        mode: '0755'
+      become: true
+      
+    - name: Create test log file
+      copy:
+        content: |
+          Test log file for S3 upload debugging
+          Job: base-debug-s3
+          Timestamp: {{ ansible_date_time.iso8601 }}
+          Host: {{ inventory_hostname }}
+        dest: /var/log/zuul/test-debug.log
+        mode: '0644'
+      become: true
+      
+    - name: Show log directory contents
+      shell: ls -la /var/log/zuul/
+      register: log_contents
+      become: true
+      
+    - name: Display log directory contents
+      debug:
+        msg: "{{ log_contents.stdout_lines }}"
