@@ -35,6 +35,9 @@
       - playbooks/base/run-debug.yaml
     post-run:
       - playbooks/base/upload-logs-debug.yaml
+    secrets:
+      - name: zuul_log_targets
+        secret: minio-logs-secret
     timeout: 1800
 
 # - job:
