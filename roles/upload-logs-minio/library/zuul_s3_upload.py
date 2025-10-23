@@ -139,9 +139,9 @@ class Uploader():
             try:
                 current_cors = client.get_bucket_cors(Bucket=bucket)
             except Exception as e:
-                # If the error is that we don't have any CORES rules,
-                # that's okay.
-                if 'NoSuchCORSConfiguration' not in str(e):
+                # If the error is that we don't have any CORS rules,
+                # or we don't have permission to access CORS, that's okay.
+                if 'NoSuchCORSConfiguration' not in str(e) and 'AccessDenied' not in str(e):
                     raise
             if current_cors:
                 if current_cors['CORSRules'] != cors['CORSRules']:
@@ -151,9 +151,10 @@ class Uploader():
                                        CORSConfiguration=cors)
         except Exception as e:
             # MinIO (which we use in testing) doesn't implement this method
+            # or we don't have permission to access CORS configuration
             minio_cors = "PutBucketCors operation: A header you provided " + \
                 "implies functionality that is not implemented"
-            if 'MalformedXML' not in str(e) and minio_cors not in str(e):
+            if 'MalformedXML' not in str(e) and minio_cors not in str(e) and 'AccessDenied' not in str(e):
                 raise
 
     def upload(self, file_list):
