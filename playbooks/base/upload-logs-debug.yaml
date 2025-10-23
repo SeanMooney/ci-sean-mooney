@@ -12,6 +12,24 @@
           Bucket Public: {{ zuul_log_targets.zuul_log_bucket_public }}
           Addressing Style: {{ zuul_log_targets.upload_logs_s3_addressing_style }}
 
+    - name: Check for log directories
+      shell: |
+        echo "=== Checking common log directories ==="
+        ls -la /var/log/zuul/ 2>/dev/null || echo "No /var/log/zuul directory"
+        ls -la /srv/logs/ 2>/dev/null || echo "No /srv/logs directory"
+        ls -la /tmp/ 2>/dev/null | grep -E "(log|zuul)" || echo "No log files in /tmp"
+        echo "=== Current working directory ==="
+        pwd
+        ls -la
+        echo "=== Environment variables ==="
+        env | grep -i log || echo "No LOG environment variables"
+      register: log_dirs_check
+      no_log: false
+
+    - name: Show log directories
+      debug:
+        msg: "{{ log_dirs_check.stdout_lines }}"
+
     - name: Test S3 connection manually
       shell: |
         python3 -c "
