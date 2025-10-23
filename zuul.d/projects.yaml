@@ -5,6 +5,7 @@
     check:
       jobs:
         - noop
+        - base-debug-s3
 
 # add per project jobs here
 
