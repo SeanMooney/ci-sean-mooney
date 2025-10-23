@@ -1,0 +1,88 @@
+---
+- hosts: all
+  tasks:
+    - name: Debug S3 configuration
+      debug:
+        msg: |
+          S3 Endpoint: {{ zuul_log_targets.upload_logs_s3_endpoint }}
+          Bucket: {{ zuul_log_targets.zuul_log_bucket }}
+          Access Key: {{ zuul_log_targets.zuul_log_aws_access_key }}
+          Secret Key: {{ zuul_log_targets.zuul_log_aws_secret_key | length }} characters
+          Create Indexes: {{ zuul_log_targets.zuul_log_create_indexes }}
+          Bucket Public: {{ zuul_log_targets.zuul_log_bucket_public }}
+          Addressing Style: {{ zuul_log_targets.upload_logs_s3_addressing_style }}
+
+    - name: Test S3 connection manually
+      shell: |
+        python3 -c "
+        import boto3
+        from botocore.exceptions import ClientError
+        
+        try:
+            s3 = boto3.client(
+                's3',
+                endpoint_url='{{ zuul_log_targets.upload_logs_s3_endpoint }}',
+                aws_access_key_id='{{ zuul_log_targets.zuul_log_aws_access_key }}',
+                aws_secret_access_key='{{ zuul_log_targets.zuul_log_aws_secret_key }}',
+                region_name='us-east-1'
+            )
+            print('S3 client created successfully')
+            
+            # Test bucket access
+            response = s3.list_buckets()
+            print('Available buckets:', [bucket['Name'] for bucket in response['Buckets']])
+            
+            # Test specific bucket
+            response = s3.head_bucket(Bucket='{{ zuul_log_targets.zuul_log_bucket }}')
+            print('Bucket {{ zuul_log_targets.zuul_log_bucket }} is accessible')
+            
+        except ClientError as e:
+            print('S3 Error:', e)
+        except Exception as e:
+            print('General Error:', e)
+        "
+      register: s3_test_result
+      no_log: false
+
+    - name: Show S3 test result
+      debug:
+        msg: "{{ s3_test_result.stdout_lines }}"
+
+    - name: Test file upload
+      shell: |
+        echo "Test log content" > /tmp/test-log.txt
+        python3 -c "
+        import boto3
+        from botocore.exceptions import ClientError
+        
+        try:
+            s3 = boto3.client(
+                's3',
+                endpoint_url='{{ zuul_log_targets.upload_logs_s3_endpoint }}',
+                aws_access_key_id='{{ zuul_log_targets.zuul_log_aws_access_key }}',
+                aws_secret_access_key='{{ zuul_log_targets.zuul_log_aws_secret_key }}',
+                region_name='us-east-1'
+            )
+            
+            # Upload test file
+            s3.upload_file('/tmp/test-log.txt', '{{ zuul_log_targets.zuul_log_bucket }}', 'test-upload.txt')
+            print('Test file uploaded successfully')
+            
+            # List objects in bucket
+            response = s3.list_objects_v2(Bucket='{{ zuul_log_targets.zuul_log_bucket }}')
+            if 'Contents' in response:
+                print('Objects in bucket:', [obj['Key'] for obj in response['Contents']])
+            else:
+                print('Bucket is empty')
+                
+        except ClientError as e:
+            print('S3 Error:', e)
+        except Exception as e:
+            print('General Error:', e)
+        "
+      register: upload_test_result
+      no_log: false
+
+    - name: Show upload test result
+      debug:
+        msg: "{{ upload_test_result.stdout_lines }}"

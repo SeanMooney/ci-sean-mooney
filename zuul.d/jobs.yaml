@@ -26,6 +26,15 @@
     nodeset: ubuntu-24-04-single-node-pod
     override-checkout: main
 
+- job:
+    name: base-debug-s3
+    parent: base
+    description: |
+      Debug version of base job with S3 upload debugging enabled.
+    post-run:
+      - playbooks/base/upload-logs-debug.yaml
+    timeout: 1800
+
 # - job:
 #     name: dsvm-minimal-base
 #     parent: devstack

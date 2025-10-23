@@ -1,6 +1,10 @@
 ---
-- hosts: all
-  roles: []
+- hosts: localhost
+  roles:
+    - role: emit-job-header
+      zuul_log_url: "https://minio-api.teim.app/zuul-logs"
+      zuul_log_path_shard_build: false
+    - log-inventory
 
 - hosts: all
   tasks:
@@ -21,12 +25,6 @@
         pkg:
           - acl # required for become to work
 
-- hosts: localhost
-  roles:
-    - role: emit-job-header
-      zuul_log_url: "https://minio-api.teim.app/zuul-logs"
-      zuul_log_path_shard_build: false
-    - log-inventory
 
 - hosts: all
   roles:
