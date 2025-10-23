@@ -127,15 +127,12 @@
     start:
       github:
         check: 'in_progress'
-        status: 'pending'
         comment: false
     success:
       github:
         check: 'success'
-        status: 'success'
         comment: true
     failure:
       github:
         check: 'failure'
-        status: 'failure'
         comment: true
