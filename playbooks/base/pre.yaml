@@ -1,10 +1,6 @@
 ---
 - hosts: all
-  roles:
-    - role: configure-mirrors
-      pypi_mirror: "http://192.168.16.32:5000/simple"
-
-- import_playbook: apt.yaml
+  roles: []
 
 - hosts: all
   tasks:
