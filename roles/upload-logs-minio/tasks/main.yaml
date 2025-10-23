@@ -1,0 +1,50 @@
+- name: Set zuul-log-path fact
+  include_role:
+    name: set-zuul-log-path-fact
+  when: zuul_log_path is not defined
+
+# Always upload (true), never upload (false) or only on failure ('failure')
+- name: Upload logs
+  when: zuul_site_upload_logs | default(true) | bool or
+        (zuul_site_upload_logs == 'failure' and not zuul_success | bool)
+  block:
+    # Use chmod instead of file because ansible 2.5 file with recurse and
+    # follow can't really handle symlinks to .
+    - name: Debug log_root
+      debug:
+        msg: "log_root {{ zuul.executor.log_root }}"
+
+    - name: Ensure logs are readable before uploading
+      delegate_to: "localhost"
+      command: "chmod -R u=rwX,g=rX,o=rX {{ zuul.executor.log_root }}/"
+      # ANSIBLE0007 chmod used in place of argument mode to file
+      tags:
+        - skip_ansible_lint
+
+    - name: Upload logs to MinIO
+      delegate_to: "localhost"
+      # REMOVED no_log: true to see actual errors
+      zuul_s3_upload:
+        endpoint: "{{ upload_logs_s3_endpoint | default(omit) }}"
+        partition: "{{ zuul_log_partition }}"
+        bucket: "{{ zuul_log_bucket }}"
+        public: "{{ zuul_log_bucket_public }}"
+        prefix: "{{ zuul_log_path }}"
+        indexes: "{{ zuul_log_create_indexes }}"
+        aws_access_key: "{{ zuul_log_aws_access_key | default(omit) }}"
+        aws_secret_key: "{{ zuul_log_aws_secret_key | default(omit) }}"
+        aws_oidc_role_arn: "{{ zuul_log_aws_oidc_role_arn | default(omit) }}"
+        aws_oidc_session_name: "{{ zuul_log_aws_oidc_session_name | default(omit) }}"
+        aws_oidc_token: "{{ zuul_log_aws_oidc_token | default(omit) }}"
+        aws_oidc_token_duration: "{{ zuul_log_aws_oidc_token_duration | default(omit) }}"
+        files:
+          - "{{ zuul.executor.log_root }}/"
+      register: upload_results
+
+- name: Return log URL to Zuul
+  delegate_to: localhost
+  zuul_return:
+    data:
+      zuul:
+        log_url: "{{ upload_results.url }}/"
+  when: upload_results is defined

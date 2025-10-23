@@ -1,7 +1,7 @@
 ---
 - hosts: all
   roles:
-    - role: upload-logs-s3
+    - role: upload-logs-minio
       upload_logs_s3_endpoint: "{{ zuul_log_targets.upload_logs_s3_endpoint }}"
       zuul_log_bucket: "{{ zuul_log_targets.zuul_log_bucket }}"
       zuul_log_aws_access_key: "{{ zuul_log_targets.zuul_log_aws_access_key }}"

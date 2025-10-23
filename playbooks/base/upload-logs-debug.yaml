@@ -105,9 +105,9 @@
       debug:
         msg: "{{ upload_test_result.stdout_lines }}"
 
-    - name: Call original upload-logs-s3 role (for comparison)
+    - name: Call custom upload-logs-minio role (for debugging)
       include_role:
-        name: upload-logs-s3
+        name: upload-logs-minio
       vars:
         upload_logs_s3_endpoint: "{{ zuul_log_targets.upload_logs_s3_endpoint | default('https://minio-api.teim.app') }}"
         zuul_log_bucket: "{{ zuul_log_targets.zuul_log_bucket | default('zuul-logs') }}"
