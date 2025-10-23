@@ -26,19 +26,6 @@
     nodeset: ubuntu-24-04-single-node-pod
     override-checkout: main
 
-- job:
-    name: base-debug-s3
-    parent: base
-    description: |
-      Debug version of base job with S3 upload debugging enabled.
-    run:
-      - playbooks/base/run-debug.yaml
-    post-run:
-      - playbooks/base/upload-logs-debug.yaml
-    secrets:
-      - name: zuul_log_targets
-        secret: minio-logs-secret
-    timeout: 1800
 
 # - job:
 #     name: dsvm-minimal-base

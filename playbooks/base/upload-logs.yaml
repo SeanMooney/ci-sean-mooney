@@ -1,5 +1,9 @@
 ---
 - hosts: all
+  tasks:
+    - name: Include Zuul manifest role
+      include_role:
+        name: generate-zuul-manifest
   roles:
     - role: upload-logs-minio
       upload_logs_s3_endpoint: "{{ zuul_log_targets.upload_logs_s3_endpoint }}"

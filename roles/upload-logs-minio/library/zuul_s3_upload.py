@@ -107,12 +107,12 @@ class Uploader():
         if endpoint:
             self.endpoint = endpoint
             self.url = os.path.join(endpoint,
-                                    bucket, self.prefix, 'index.html')
+                                    bucket, self.prefix)
         else:
             self.endpoint = 'https://s3.amazonaws.com/'
             return_endpoint = 'https://' + bucket + '.s3.amazonaws.com/'
             self.url = os.path.join(return_endpoint,
-                                    self.prefix, 'index.html')
+                                    self.prefix)
 
         # The default for max_pool_connections is 10, which is easily
         # exhausted if the upload threads overwhelm them.
