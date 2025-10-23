@@ -127,10 +127,13 @@
     start:
       github:
         check: 'in_progress'
+        label: 'Zuul CI'
         comment: false
     success:
       github:
         check: 'success'
+        label: 'Zuul CI'
     failure:
       github:
         check: 'failure'
+        label: 'Zuul CI'
