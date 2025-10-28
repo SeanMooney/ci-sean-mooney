@@ -2,5 +2,11 @@
 - nodeset:
     name: ubuntu-24-04-single-node-pod
     nodes:
-      - name: ubuntu-24-04
+      - name: controller
         label: ubuntu-24-04-pod
+
+- nodeset:
+    name: debian-opencode-single-node-pod
+    nodes:
+      - name: controller
+        label: debian-opencode
