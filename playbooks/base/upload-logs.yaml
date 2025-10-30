@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars:
-    zuul_output_dir: "{{ ansible_user_dir }}/zuul-output"
+    zuul_output_dir: "{{ ansible_user_dir }}"
   tasks:
     - name: Stage output from all nodes
       include_role:
@@ -31,7 +31,7 @@
         loop_var: zj_output_dir
     
     - name: List remote staged output contents for debugging
-      command: ls -laR "{{ zuul_output_dir }}/"
+      command: ls -laR "{{ zuul_output_dir }}"
       register: staged_contents
     
     - name: Debug staged contents
