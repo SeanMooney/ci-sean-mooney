@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  vars:
+    ansible_connection: ssh
   tasks:
     - name: Stage output from all nodes
       include_role:
