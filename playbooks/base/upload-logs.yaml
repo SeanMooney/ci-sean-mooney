@@ -30,12 +30,37 @@
       loop_control:
         loop_var: zj_output_dir
     
+    - name: List remote staged output contents for debugging
+      command: ls -laR "{{ zuul_output_dir }}/"
+      register: staged_contents
+    
+    - name: Debug staged contents
+      debug:
+        msg: "Staged contents: {{ staged_contents.stdout }}"
+    
+    - name: Debug zuul variables
+      debug:
+        msg: |
+          zuul.executor.work_root: {{ zuul.executor.work_root }}
+          zuul.executor.log_root: {{ zuul.executor.log_root }}
+          zuul_output_dir: {{ zuul_output_dir }}
+          inventory_hostname: {{ inventory_hostname }}
+          ansible_user_dir: {{ ansible_user_dir }}
+    
+    - name: Debug log path
+      debug:
+        msg: "log_path: {{ log_path | default('undefined') }}"
+    
     - name: Find logs files
       find:
         paths: "{{ zuul_output_dir }}/logs"
         file_type: file
         recurse: yes
       register: found_logs
+
+    - name: Debug found logs
+      debug:
+        msg: "found_logs: {{ found_logs.files | default('undefined') }}"
 
     - name: Fetch logs to executor
       fetch:
@@ -58,6 +83,15 @@
         flat: yes
       loop: "{{ found_artifacts.files }}"
 
+    - name: List local log directory for debugging
+      delegate_to: localhost
+      command: ls -laR "{{ log_path | default(zuul.executor.log_root) }}/"
+      register: local_log_contents
+    
+    - name: Debug local log contents
+      debug:
+        msg: "Local log dir: {{ local_log_contents.stdout }}"
+    
     - name: Find docs files
       find:
         paths: "{{ zuul_output_dir }}/docs"
