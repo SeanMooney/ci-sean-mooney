@@ -1,7 +1,5 @@
 ---
 - hosts: all
-  vars:
-    zuul_output_dir: "{{ ansible_user_dir }}"
   tasks:
     - name: Stage output from all nodes
       include_role:
@@ -31,7 +29,7 @@
         loop_var: zj_output_dir
     
     - name: List remote staged output contents for debugging
-      command: ls -laR "{{ zuul_output_dir }}"
+      command: find . \( -path 'src' -o -path '*.bun' -o -path '*.cache' -o -path '*.git' \) -prune -o -print
       register: staged_contents
     
     - name: Debug staged contents
@@ -53,7 +51,7 @@
     
     - name: Find logs files
       find:
-        paths: "{{ zuul_output_dir }}/logs"
+        paths: "logs"
         file_type: file
         recurse: yes
       register: found_logs
@@ -68,43 +66,6 @@
         dest: "{{ log_path | default(zuul.executor.log_root) }}/{{ item.path | regex_replace('^' + (zuul_output_dir + '/logs/'), '') }}"
         flat: yes
       loop: "{{ found_logs.files }}"
-
-    - name: Find artifacts files
-      find:
-        paths: "{{ zuul_output_dir }}/artifacts"
-        file_type: file
-        recurse: yes
-      register: found_artifacts
-
-    - name: Fetch artifacts to executor
-      fetch:
-        src: "{{ item.path }}"
-        dest: "{{ zuul.executor.work_root }}/artifacts/{{ item.path | regex_replace('^' + (zuul_output_dir + '/artifacts/'), '') }}"
-        flat: yes
-      loop: "{{ found_artifacts.files }}"
-
-    - name: List local log directory for debugging
-      delegate_to: localhost
-      command: ls -laR "{{ log_path | default(zuul.executor.log_root) }}/"
-      register: local_log_contents
-    
-    - name: Debug local log contents
-      debug:
-        msg: "Local log dir: {{ local_log_contents.stdout }}"
-    
-    - name: Find docs files
-      find:
-        paths: "{{ zuul_output_dir }}/docs"
-        file_type: file
-        recurse: yes
-      register: found_docs
-
-    - name: Fetch docs to executor
-      fetch:
-        src: "{{ item.path }}"
-        dest: "{{ zuul.executor.work_root }}/docs/{{ item.path | regex_replace('^' + (zuul_output_dir + '/docs/'), '') }}"
-        flat: yes
-      loop: "{{ found_docs.files }}"
 
 - hosts: localhost
   tasks:
