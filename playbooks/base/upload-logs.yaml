@@ -30,18 +30,47 @@
       loop_control:
         loop_var: zj_output_dir
     
-    - name: Fetch staged output to executor
+    - name: Find logs files
+      find:
+        paths: "{{ zuul_output_dir }}/logs"
+        file_type: file
+        recurse: yes
+      register: found_logs
+
+    - name: Fetch logs to executor
       fetch:
-        src: "{{ zuul_output_dir }}/{{ item.src }}/"
-        dest: "{{ item.dest }}/"
+        src: "{{ item.path }}"
+        dest: "{{ log_path | default(zuul.executor.log_root) }}/{{ item.path | regex_replace('^' + (zuul_output_dir + '/logs/'), '') }}"
         flat: yes
-      loop:
-        - dest: "{{ log_path | default(zuul.executor.log_root) }}"
-          src: "logs"
-        - dest: "{{ zuul.executor.work_root }}/artifacts"
-          src: "artifacts"  
-        - dest: "{{ zuul.executor.work_root }}/docs"
-          src: "docs"
+      loop: "{{ found_logs.files }}"
+
+    - name: Find artifacts files
+      find:
+        paths: "{{ zuul_output_dir }}/artifacts"
+        file_type: file
+        recurse: yes
+      register: found_artifacts
+
+    - name: Fetch artifacts to executor
+      fetch:
+        src: "{{ item.path }}"
+        dest: "{{ zuul.executor.work_root }}/artifacts/{{ item.path | regex_replace('^' + (zuul_output_dir + '/artifacts/'), '') }}"
+        flat: yes
+      loop: "{{ found_artifacts.files }}"
+
+    - name: Find docs files
+      find:
+        paths: "{{ zuul_output_dir }}/docs"
+        file_type: file
+        recurse: yes
+      register: found_docs
+
+    - name: Fetch docs to executor
+      fetch:
+        src: "{{ item.path }}"
+        dest: "{{ zuul.executor.work_root }}/docs/{{ item.path | regex_replace('^' + (zuul_output_dir + '/docs/'), '') }}"
+        flat: yes
+      loop: "{{ found_docs.files }}"
 
 - hosts: localhost
   tasks:
