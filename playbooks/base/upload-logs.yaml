@@ -29,7 +29,7 @@
         loop_var: zj_output_dir
     
     - name: List remote staged output contents for debugging
-      command: find . \( -path 'src' -o -path '*.bun' -o -path '*.cache' -o -path '*.git' \) -prune -o -print
+      command: find . \( -path '*src' -o -path '*/.*' \) -prune -o -print
       register: staged_contents
     
     - name: Debug staged contents
