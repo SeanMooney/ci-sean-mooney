@@ -123,7 +123,6 @@
         - event: pull_request
           action: comment
           comment: (?i)^\s*recheck\s*$
-        - event: check_run
     start:
       github:
         check: 'in_progress'
