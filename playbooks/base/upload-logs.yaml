@@ -1,15 +1,47 @@
 ---
 - hosts: all
   vars:
-    ansible_connection: ssh
+    zuul_output_dir: "{{ ansible_user_dir }}/zuul-output"
   tasks:
     - name: Stage output from all nodes
       include_role:
         name: stage-output
     
+    - name: Set log path for multiple nodes
+      set_fact:
+        log_path: "{{ zuul.executor.log_root }}/{{ inventory_hostname }}"
+      when: groups['all'] | length > 1
+
+    - name: Set log path for single node
+      set_fact:
+        log_path: "{{ zuul.executor.log_root }}"
+      when: log_path is not defined
+    
+    - name: Ensure local output dirs
+      delegate_to: localhost
+      file:
+        path: "{{ zj_output_dir }}"
+        state: directory
+        mode: 0755
+      with_items:
+        - "{{ log_path | default(zuul.executor.log_root) }}"
+        - "{{ zuul.executor.work_root }}/artifacts"
+        - "{{ zuul.executor.work_root }}/docs"
+      loop_control:
+        loop_var: zj_output_dir
+    
     - name: Fetch staged output to executor
-      include_role:
-        name: fetch-output
+      fetch:
+        src: "{{ zuul_output_dir }}/{{ item.src }}/"
+        dest: "{{ item.dest }}/"
+        flat: yes
+      loop:
+        - dest: "{{ log_path | default(zuul.executor.log_root) }}"
+          src: "logs"
+        - dest: "{{ zuul.executor.work_root }}/artifacts"
+          src: "artifacts"  
+        - dest: "{{ zuul.executor.work_root }}/docs"
+          src: "docs"
 
 - hosts: localhost
   tasks:
