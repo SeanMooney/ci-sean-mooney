@@ -1,4 +1,14 @@
 ---
+- hosts: all
+  tasks:
+    - name: Stage output from all nodes
+      include_role:
+        name: stage-output
+    
+    - name: Fetch staged output to executor
+      include_role:
+        name: fetch-output
+
 - hosts: localhost
   tasks:
     - name: Include Zuul manifest role
