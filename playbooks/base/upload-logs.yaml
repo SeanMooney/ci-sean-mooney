@@ -41,7 +41,6 @@
         msg: |
           zuul.executor.work_root: {{ zuul.executor.work_root }}
           zuul.executor.log_root: {{ zuul.executor.log_root }}
-          zuul_output_dir: {{ zuul_output_dir }}
           inventory_hostname: {{ inventory_hostname }}
           ansible_user_dir: {{ ansible_user_dir }}
     
@@ -63,7 +62,7 @@
     - name: Fetch logs to executor
       fetch:
         src: "{{ item.path }}"
-        dest: "{{ log_path | default(zuul.executor.log_root) }}/{{ item.path | regex_replace('^' + (zuul_output_dir + '/logs/'), '') }}"
+        dest: "{{ log_path | default(zuul.executor.log_root) }}/{{ item.path | regex_replace('logs/'), '') }}"
         flat: yes
       loop: "{{ found_logs.files }}"
 
