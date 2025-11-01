@@ -50,7 +50,7 @@
     
     - name: Find logs files
       find:
-        paths: "./logs"
+        paths: "{{ ansible_user_dir }}/logs"
         file_type: file
         recurse: yes
       register: found_logs
@@ -62,7 +62,7 @@
     - name: Fetch logs to executor
       fetch:
         src: "{{ item.path }}"
-        dest: "{{ log_path | default(zuul.executor.log_root) }}/{{ item.path | regex_replace('^\\.?/?logs/', '') }}"
+        dest: "{{ log_path | default(zuul.executor.log_root) }}/{{ item.path | regex_replace('^' + ansible_user_dir + '/logs/', '') }}"
         flat: yes
       loop: "{{ found_logs.files }}"
 
