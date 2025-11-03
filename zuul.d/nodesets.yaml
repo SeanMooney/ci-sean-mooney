@@ -10,3 +10,9 @@
     nodes:
       - name: controller
         label: debian-opencode
+
+- nodeset:
+    name: debian-claude-code-single-node-pod
+    nodes:
+      - name: controller
+        label: debian-claude-code
