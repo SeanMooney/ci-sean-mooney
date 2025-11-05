@@ -5,3 +5,10 @@
     check:
       jobs:
         - noop
+
+- project:
+    name: openstack/watcher
+    manual-ci:
+      jobs:
+        - noop
+        - teim-code-review
