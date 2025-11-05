@@ -22,15 +22,16 @@
         - event: comment-added
           comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*teim-ci:\s*manual.*
     precedence: high
+    # do not set code-review for now just comment
     start:
       opendev:
         Code-Review: 0
     success:
       opendev:
-        Code-Review: 1
+        Code-Review: 0
     failure:
       opendev:
-        Code-Review: -1
+        Code-Review: 0
 
 - pipeline:
     name: automatic-ci

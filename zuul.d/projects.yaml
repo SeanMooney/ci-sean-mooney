@@ -7,8 +7,8 @@
         - noop
 
 - project:
-    name: openstack/watcher
+    name: openstack/.*
     manual-ci:
       jobs:
-        - noop
         - teim-code-review
+
