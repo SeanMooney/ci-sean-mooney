@@ -6,7 +6,7 @@
     success-message: Build succeeded (manual-ci pipeline).
     failure-message: |
       Build failed (manual-ci pipeline). To rerun just this ci comment
-      "seans-manual-ci: recheck". To rerun other ci jobs comment "recheck".
+      "teim-ci: manual". To rerun other ci jobs comment "recheck".
       Note this ci does not currently run on "recheck".
     manager: independent
     require:
@@ -20,7 +20,7 @@
     trigger:
       opendev:
         - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-manual-ci:\s*recheck
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*teim-ci:\s*manual.*
     precedence: high
     start:
       opendev:
@@ -39,7 +39,7 @@
     success-message: Build succeeded (automatic-ci pipeline).
     failure-message: |
       Build failed (automatic-ci pipeline). To rerun just this ci comment
-      "seans-automatic-ci: recheck". To rerun other ci jobs comment "recheck".
+      "teim-ci: auto". To rerun other ci jobs comment "recheck".
       Note this ci does run on "recheck".
     manager: independent
     require:
@@ -55,9 +55,9 @@
         - event: patchset-created
         - event: change-restored
         - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck.*
         - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*seans-automatic-ci:\s*recheck
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*teim-ci:\s*auto.*
     precedence: low
     start:
       opendev:
