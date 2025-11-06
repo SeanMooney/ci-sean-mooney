@@ -12,3 +12,20 @@
       jobs:
         - teim-code-review
 
+- project:
+    name: ^zuul/.*
+    manual-ci:
+      jobs:
+        - teim-code-review
+
+- project:
+    name: ^github.com/SeanMooney/.*
+    manual-ci:
+      jobs:
+        - teim-code-review
+        
+- project:
+    name: ^openstack/.*watcher.*
+    automatic-ci:
+      jobs:
+        - teim-code-review
