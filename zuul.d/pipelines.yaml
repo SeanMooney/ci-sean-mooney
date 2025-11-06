@@ -65,10 +65,10 @@
         Code-Review: 0
     success:
       opendev:
-        Code-Review: 1
+        Code-Review: 0
     failure:
       opendev:
-        Code-Review: -1
+        Code-Review: 0
 
 - pipeline:
     name: nightly-ci
