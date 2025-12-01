@@ -23,9 +23,12 @@
     manual-ci:
       jobs:
         - teim-code-review
-        
+
 - project:
     name: ^openstack/.*watcher.*
     automatic-ci:
+      jobs:
+        - teim-code-review
+    manual-ci:
       jobs:
         - teim-code-review
