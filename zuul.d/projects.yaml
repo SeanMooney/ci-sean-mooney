@@ -32,3 +32,13 @@
     manual-ci:
       jobs:
         - teim-code-review
+
+- project:
+    name: ^openstack/.*cyborg.*
+    automatic-ci:
+      jobs:
+        - teim-code-review
+    manual-ci:
+      jobs:
+        - teim-code-review
+
