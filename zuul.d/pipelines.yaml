@@ -13,10 +13,6 @@
       opendev:
         open: true
         current-patchset: true
-    reject:
-      opendev:
-        approval:
-          - Workflow: -1
     trigger:
       opendev:
         - event: comment-added
@@ -47,10 +43,6 @@
       opendev:
         open: true
         current-patchset: true
-    reject:
-      opendev:
-        approval:
-          - Workflow: -1
     trigger:
       opendev:
         - event: patchset-created
@@ -82,12 +74,6 @@
       timer:
         - time: '17 05 * * * * 60'
     precedence: low
-    success:
-      opendev:
-        Code-Review: 1
-    failure:
-      opendev:
-        Code-Review: -1
 
 - pipeline:
     name: weekly-ci
@@ -101,12 +87,6 @@
       timer:
         - time: '0 8 * * 6'
     precedence: low
-    success:
-      opendev:
-        Code-Review: 1
-    failure:
-      opendev:
-        Code-Review: -1
 
 - pipeline:
     name: check
