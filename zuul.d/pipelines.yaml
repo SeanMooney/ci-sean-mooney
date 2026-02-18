@@ -43,6 +43,10 @@
       opendev:
         open: true
         current-patchset: true
+    reject:
+      opendev:
+        approval:
+          - Workflow: -1
     trigger:
       opendev:
         - event: patchset-created
