@@ -6,17 +6,17 @@
       jobs:
         - noop
 
-- project:
-    name: ^openstack/.*
-    manual-ci:
-      jobs:
-        - teim-code-review
+#- project:
+#    name: ^openstack/.*
+#    manual-ci:
+#      jobs:
+#        - teim-code-review
 
-- project:
-    name: ^zuul/.*
-    manual-ci:
-      jobs:
-        - teim-code-review
+#- project:
+#    name: ^zuul/.*
+#    manual-ci:
+#      jobs:
+#        - teim-code-review
 
 - project:
     name: ^github.com/SeanMooney/.*
