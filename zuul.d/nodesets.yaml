@@ -6,12 +6,6 @@
         label: ubuntu-24-04-pod
 
 - nodeset:
-    name: debian-opencode-single-node-pod
-    nodes:
-      - name: controller
-        label: debian-opencode
-
-- nodeset:
     name: debian-claude-code-single-node-pod
     nodes:
       - name: controller
