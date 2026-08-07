@@ -10,3 +10,9 @@
     nodes:
       - name: controller
         label: debian-claude-code
+
+- nodeset:
+    name: image-builder
+    nodes:
+      - name: builder
+        label: almalinux-9-static
