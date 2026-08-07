@@ -6,13 +6,13 @@
       jobs:
         - noop
 
-#- project:
+# - project:
 #    name: ^openstack/.*
 #    manual-ci:
 #      jobs:
 #        - teim-code-review
 
-#- project:
+# - project:
 #    name: ^zuul/.*
 #    manual-ci:
 #      jobs:
@@ -23,7 +23,6 @@
     manual-ci:
       jobs:
         - teim-code-review
-
 - project:
     name: ^openstack/.*watcher.*
     automatic-ci:
@@ -41,4 +40,3 @@
     manual-ci:
       jobs:
         - teim-code-review
-

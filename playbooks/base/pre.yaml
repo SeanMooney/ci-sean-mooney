@@ -7,7 +7,7 @@
 
 - hosts: all
   tasks:
-    - name: "install base packages"
+    - name: Install base packages
       package:
         name: "{{ item }}"
         state: present
@@ -19,10 +19,10 @@
       when: ansible_os_family == "Debian"
       become: true
       apt:
-        state: latest
+        state: present
         update_cache: true
         pkg:
-          - acl # required for become to work
+          - acl  # required for become to work
 
 - hosts: all
   roles:

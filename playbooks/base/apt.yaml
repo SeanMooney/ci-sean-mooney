@@ -6,7 +6,7 @@
       blockinfile:
         path: /etc/apt/apt.conf
         create: true
-        mode: 0644
+        mode: "0644"
         block: |
           Acquire::http::Proxy "http://192.168.16.32:3142";
           Acquire::https::Proxy "DIRECT";

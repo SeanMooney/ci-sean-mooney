@@ -1,15 +1,27 @@
+---
 exclude_paths:
-    - zuul.d/
-    - .tox
-parseable: true
+  - zuul.d/
+  - .tox
+mock_modules:
+  - zuul_return
+mock_roles:
+  - emit-job-header
+  - ensure-output-dirs
+  - generate-zuul-manifest
+  - local-log-download
+  - log-inventory
+  - prepare-workspace-git
+  - set-zuul-log-path-fact
+  - stage-output
+  - start-zuul-console
+  - validate-host
 quiet: false
 skip_list:
-    - '106'  # Role name does not match ``^[a-z][a-z0-9_]+$`` pattern
-    - '204'  # [E204] Lines should be no longer than 120 chars
-             # TODO(AJaeger): E208 gives false positives currently, we
-             # should enable it once all issues in zuul-jobs and
-             # ansible-lint are fixed.
-    - '208'  # File permissions not mentioned
-    - '301'  # [E301] Commands should not change things if nothing needs doing
-    - '306'  # [E306] Shells that use pipes should set the pipefail option
+  - command-instead-of-module
+  - fqcn[action-core]
+  - name[play]
+  - no-changed-when
+  - risky-file-permissions
+  - risky-shell-pipe
+  - role-name
 verbosity: 1
