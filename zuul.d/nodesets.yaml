@@ -15,4 +15,4 @@
     name: image-builder
     nodes:
       - name: builder
-        label: almalinux-9-static
+        label: almalinux-10-static
