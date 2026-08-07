@@ -1,70 +1,17 @@
 ---
 - hosts: all
+  vars:
+    zuul_output_dir: "{{ ansible_user_dir }}/zuul-output"
   tasks:
     - name: Stage output from all nodes
       include_role:
         name: stage-output
+      vars:
+        stage_dir: "{{ zuul_output_dir }}"
 
-    - name: Set log path for multiple nodes
-      set_fact:
-        log_path: "{{ zuul.executor.log_root }}/{{ inventory_hostname }}"
-      when: groups['all'] | length > 1
-
-    - name: Set log path for single node
-      set_fact:
-        log_path: "{{ zuul.executor.log_root }}"
-      when: log_path is not defined
-
-    - name: Ensure local output dirs
-      delegate_to: localhost
-      file:
-        path: "{{ zj_output_dir }}"
-        state: directory
-        mode: "0755"
-      with_items:
-        - "{{ log_path | default(zuul.executor.log_root) }}"
-        - "{{ zuul.executor.work_root }}/artifacts"
-        - "{{ zuul.executor.work_root }}/docs"
-      loop_control:
-        loop_var: zj_output_dir
-
-    - name: List remote staged output contents for debugging
-      command: find . \( -path '*src' -o -path '*/.*' \) -prune -o -print
-      register: staged_contents
-
-    - name: Debug staged contents
-      debug:
-        msg: "Staged contents: {{ staged_contents.stdout }}"
-
-    - name: Debug zuul variables
-      debug:
-        msg: |
-          zuul.executor.work_root: {{ zuul.executor.work_root }}
-          zuul.executor.log_root: {{ zuul.executor.log_root }}
-          inventory_hostname: {{ inventory_hostname }}
-          ansible_user_dir: {{ ansible_user_dir }}
-
-    - name: Debug log path
-      debug:
-        msg: "log_path: {{ log_path | default('undefined') }}"
-
-    - name: Find logs files
-      find:
-        paths: "{{ ansible_user_dir }}/logs"
-        file_type: file
-        recurse: true
-      register: found_logs
-
-    - name: Debug found logs
-      debug:
-        msg: "found_logs: {{ found_logs.files | default('undefined') }}"
-
-    - name: Fetch logs to executor
-      fetch:
-        src: "{{ item.path }}"
-        dest: "{{ log_path | default(zuul.executor.log_root) }}/{{ item.path | regex_replace('^' + ansible_user_dir + '/logs/', '') }}"
-        flat: true
-      loop: "{{ found_logs.files }}"
+    - name: Fetch output from all nodes
+      include_role:
+        name: fetch-output
 
 - hosts: localhost
   tasks:
