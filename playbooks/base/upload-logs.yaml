@@ -10,8 +10,78 @@
         stage_dir: "{{ zuul_output_dir }}"
 
     - name: Fetch output from all nodes
+      when: (ansible_connection | default('ssh')) != 'kubectl'
       include_role:
         name: fetch-output
+
+    - name: Set Kubernetes log destination for multiple nodes
+      when:
+        - (ansible_connection | default('ssh')) == 'kubectl'
+        - groups['all'] | length > 1
+      set_fact:
+        log_path: "{{ zuul.executor.log_root }}/{{ inventory_hostname }}"
+
+    - name: Set Kubernetes log destination for a single node
+      when:
+        - (ansible_connection | default('ssh')) == 'kubectl'
+        - log_path is not defined
+      set_fact:
+        log_path: "{{ zuul.executor.log_root }}"
+
+    - name: Define Kubernetes output locations
+      when: (ansible_connection | default('ssh')) == 'kubectl'
+      set_fact:
+        kubectl_output_locations:
+          - src: "{{ zuul_output_dir }}/logs"
+            dest: "{{ log_path }}"
+          - src: "{{ zuul_output_dir }}/artifacts"
+            dest: "{{ zuul.executor.work_root }}/artifacts"
+          - src: "{{ zuul_output_dir }}/docs"
+            dest: "{{ zuul.executor.work_root }}/docs"
+
+    - name: Ensure local Kubernetes output directories exist
+      when: (ansible_connection | default('ssh')) == 'kubectl'
+      delegate_to: localhost
+      file:
+        path: "{{ item.dest }}"
+        state: directory
+        mode: "0755"
+      loop: "{{ kubectl_output_locations | default([]) }}"
+
+    - name: Discover staged Kubernetes output
+      when: (ansible_connection | default('ssh')) == 'kubectl'
+      find:
+        paths: "{{ item.src }}"
+        file_type: file
+        recurse: true
+      loop: "{{ kubectl_output_locations | default([]) }}"
+      register: kubectl_output_files
+
+    - name: Ensure local Kubernetes output parent directories exist
+      when: (ansible_connection | default('ssh')) == 'kubectl'
+      delegate_to: localhost
+      file:
+        path: >-
+          {{ item.0.item.dest }}/{{ item.1.path
+             | regex_replace('^' + (item.0.item.src | regex_escape) + '/?', '')
+             | dirname }}
+        state: directory
+        mode: "0755"
+      loop: >-
+        {{ ((kubectl_output_files | default({'results': []})).results)
+           | subelements('files') }}
+
+    - name: Fetch staged output over the Kubernetes connection
+      when: (ansible_connection | default('ssh')) == 'kubectl'
+      fetch:
+        src: "{{ item.1.path }}"
+        dest: >-
+          {{ item.0.item.dest }}/{{ item.1.path
+             | regex_replace('^' + (item.0.item.src | regex_escape) + '/?', '') }}
+        flat: true
+      loop: >-
+        {{ ((kubectl_output_files | default({'results': []})).results)
+           | subelements('files') }}
 
 - hosts: localhost
   tasks:
