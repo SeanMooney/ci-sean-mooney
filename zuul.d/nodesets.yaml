@@ -15,4 +15,4 @@
     name: image-builder
     nodes:
       - name: builder
-        label: almalinux-10-static
+        label: centos-10-stream-static
