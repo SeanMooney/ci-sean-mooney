@@ -1,4 +1,19 @@
 ---
+# Explicitly document the default policy: projects do not run jobs unless a
+# more specific project stanza below assigns them to a pipeline.
+- project:
+    name: ^.*$
+    check:
+      jobs: []
+    manual-ci:
+      jobs: []
+    automatic-ci:
+      jobs: []
+    nightly-ci:
+      jobs: []
+    weekly-ci:
+      jobs: []
+
 # for the config project just run noop for now
 - project:
     name: SeanMooney/ci-sean-mooney
