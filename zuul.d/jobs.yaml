@@ -14,12 +14,15 @@
       - playbooks/base/pre.yaml
     post-run:
       - playbooks/base/upload-logs.yaml
-    secrets:
-      - name: zuul_log_targets
-        secret: minio-logs-secret
     vars:
       ara_report_type: html
       ara_report_path: ara-report
+      zuul_log_url: https://zuul-logs.teim.app
+      zuul_logserver:
+        host: zuul-logserver-ssh.zuul-system.svc.cluster.local
+        username: zuul
+        # Verified against the running log server through the Kubernetes API.
+        host_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICsltTivZhX8QWrcgGhd8djn1CSUwVX0rxgfMsO/4Jrp
     roles:
       - zuul: zuul/zuul-jobs
     timeout: 1800

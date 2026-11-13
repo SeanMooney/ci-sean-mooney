@@ -14,6 +14,7 @@ mock_roles:
   - set-zuul-log-path-fact
   - stage-output
   - start-zuul-console
+  - upload-logs
   - validate-host
 quiet: false
 skip_list:
